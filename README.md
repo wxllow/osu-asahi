@@ -1,4 +1,4 @@
-# OSU Asahi
+# osu! Asahi
 
 A script to automatically build and install osu! (lazer) and its dependencies natively on ARM64 Linux (ex. Asahi Linux).
 
