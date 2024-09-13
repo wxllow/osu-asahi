@@ -5,7 +5,7 @@ A script to automatically build and install osu! (lazer) and its dependencies na
 ## Run
 
 ```bash
-sh <(curl https://raw.githubusercontent.com/osuushi/osu-asahi/main/osu-asahi.sh)
+sh <(curl https://raw.githubusercontent.com/wxllow/osu-asahi/main/osu-asahi.sh)
 ```
 
 ## Current Limitations
