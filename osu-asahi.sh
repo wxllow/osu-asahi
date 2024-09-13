@@ -26,7 +26,7 @@ if [[ $EUID -eq 0 ]]; then
 fi
 
 if [ "$(uname -m)" != "aarch64" ]; then
-    error "This script is meant or ARM64 devices. If you're on x86_64, just use the official builds please."
+    error "This script is meant for ARM64 devices. If you're on x86_64, just use the official builds please."
 fi
 
 info "osu! Asahi Installer\n"
@@ -79,7 +79,7 @@ sed -i '37s/.*/std::wint_t IDs[2];/' src/libveldrid-spirv/libveldrid-spirv.cpp
 ./ext/sync-shaderc.sh
 
 info "Building dependencies..."
-sed -i 's/_CMakeExtraBuildArgs=.*/_CMakeExtraBuildArgs="-j$(getconf _NPROCESSORS_ONLN)"/g' ./build-native.sh # Use all the cores
+eval sed -i 's/_CMakeExtraBuildArgs=.*/_CMakeExtraBuildArgs="-j$(getconf _NPROCESSORS_ONLN)"/g' ./build-native.sh # Use all the cores
 ./build-native.sh -release linux-x64
 
 info "Installing dependencies..."
