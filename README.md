@@ -11,7 +11,16 @@ sh <(curl https://raw.githubusercontent.com/wxllow/osu-asahi/main/osu-asahi.sh)
 ## Current Limitations
 
 - [ ] **Scores will not be submitted due to being an "unofficial build"** :\(
-- [ ] Only designed/tested for Fedora 40, but should work with other distros if SDL2 and dotnet SDK 8.0 are installed.
+
+## What It Does
+
+The script is relatively simple, and functions as follows
+
+- Download necessary system dependencies
+- Clone and build the latest osu!lazer release from source
+- Download and install libbass dependencies
+- Clone and build the latest veldrid-spirv release from source
+- Create alias and .desktop entry
 
 ## Credits
 

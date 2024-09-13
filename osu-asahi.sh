@@ -31,17 +31,41 @@ fi
 
 info "osu! Asahi Installer\n"
 
-if [ -f /etc/fedora-release ]; then
-    info "Installing packages..."
-    sudo dnf install dotnet-sdk-8.0 SDL2-devel cmake python3
-else
-    warn "Not using Fedora, skipping package installation. Please install these packages manually: dotnet-sdk-8.0 SDL2-dev cmake python3"
-    echo "Press enter to continue..."
-    read
-fi
-
 mkdir -p /tmp/osu-asahi
 cd /tmp/osu-asahi
+
+# Install dependencies
+source /etc/os-release
+
+case $ID in
+fedora*)
+    info "Installing packages..."
+    sudo dnf install dotnet-sdk-8.0 SDL2-devel cmake python3
+    ;;
+*buntu*)
+    info "Installing packages..."
+    sudo apt-get install dotnet8 libsdl2-dev cmake python3
+    ;;
+archarm*)
+    info "Installing pacman packages..."
+    sudo pacman -S sdl2 cmake python --needed
+    # if not installed (check pacman)
+    if ! pacman -Qs dotnet-sdk-bin; then
+        warn "The following packages will be installed from the AUR: dotnet-core-bin"
+        warn "Disclaimer: The AUR is a user maintained repository"
+        read -p "Press enter to continue..."
+
+        git clone https://aur.archlinux.org/dotnet-core-bin.git
+        cd dotnet-core-bin
+        makepkg -si
+        cd ..
+    fi
+    ;;
+*)
+    warn "Unsupported distro, skipping package installation. Please install these packages' equivalents manually: dotnet-sdk-8.0 SDL2-dev cmake python3"
+    read -p "Press enter to continue..."
+    ;;
+esac
 
 info "Cloning osu!..."
 if ! [ -d /tmp/osu-asahi/osu ]; then
@@ -53,14 +77,15 @@ fi
 info "Building osu!..."
 cd /tmp/osu-asahi/osu
 git checkout $OSU_GIT_BRANCH
-git submodule update --init --recursive
 git pull origin $OSU_GIT_BRANCH
+git submodule update --init --recursive
 
 killall -KILL dotnet || true
 DOTNET_CLI_TELEMETRY_OPTOUT="1" dotnet publish osu.Desktop \
     --configuration Release \
     --use-current-runtime \
     --output ~/.local/share/osu-asahi \
+    -v normal \
     /property:Version="$OSU_GIT_BRANCH"
 
 info "Downloading/cloning dependencies..."
@@ -99,12 +124,15 @@ cat <<EOF >$HOME/.local/share/applications/osu-asahi.desktop
 [Desktop Entry]
 Name=osu!
 Comment=rhythm is just a *click* away!
-Exec=${HOME}/.local/bin/osu
+Exec=${HOME}/.local/bin/osu %F
 Icon=${HOME}/.local/share/osu-asahi/lazer.ico
 Terminal=false
 Type=Application
 Categories=Game;ActionGame
-MimeType=x-scheme-handler/osu
+MimeType=application/x-osu-beatmap-archive;application/x-osu-skin-archive;application/x-osu-beatmap;application/x-osu-storyboard;application/x-osu-replay;x-scheme-handler/osu;
+StartupNotify=true
+StartupWMClass=osu!
+SingleMainWindow=true
 PrefersNonDefaultGPU=true
 X-KDE-RunOnDiscreteGpu=true
 EOF
