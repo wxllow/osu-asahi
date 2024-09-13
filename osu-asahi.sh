@@ -137,8 +137,13 @@ PrefersNonDefaultGPU=true
 X-KDE-RunOnDiscreteGpu=true
 EOF
 
-if ! [ -L $HOME/.local/bin/osu ]; then
-    ln -s $HOME/.local/share/osu-asahi/osu\! ~/.local/bin/osu
+if [[ ":$PATH:" == *":$HOME/.local/bin:"* ]]; then
+    if ! [ -L $HOME/.local/bin/osu ]; then
+        mkdir -p $HOME/.local/bin
+        ln -s $HOME/.local/share/osu-asahi/osu\! ~/.local/bin/osu
+    fi
+else
+    warn "Failed to create $HOME/.local/bin/osu symlink, you can stil launch it at $HOME/.local/share/osu-asahi/osu\!"
 fi
 
 echo ""
