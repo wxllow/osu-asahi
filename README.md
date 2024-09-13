@@ -11,6 +11,7 @@ sh <(curl https://raw.githubusercontent.com/wxllow/osu-asahi/main/osu-asahi.sh)
 ## Current Limitations
 
 - [ ] **Scores will not be submitted due to being an "unofficial build"** :\(
+- [ ] [Will eventually become obsolete](https://github.com/ppy/osu-deploy/pull/170)
 
 ## What It Does
 
